@@ -1,0 +1,135 @@
+package datastructures.dictionaries;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import cse332.interfaces.misc.BString;
+import cse332.interfaces.trie.TrieMap;
+
+/**
+ * See cse332/interfaces/trie/TrieMap.java
+ * and cse332/interfaces/misc/Dictionary.java
+ * for method specifications.
+ */
+public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> extends TrieMap<A, K, V> {
+    public class HashTrieNode extends TrieNode<Map<A, HashTrieNode>, HashTrieNode> {
+        public HashTrieNode() {
+            this(null);
+        }
+
+        public HashTrieNode(V value) {
+            this.pointers = new HashMap<A, HashTrieNode>();
+            this.value = value;
+        }
+
+        @Override
+        public Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>> iterator() {
+            return pointers.entrySet().iterator();
+        }
+    }
+
+    public HashTrieMap(Class<K> KClass) {
+        super(KClass);
+        this.root = new HashTrieNode();
+    }
+
+    @SuppressWarnings("unchecked")
+	@Override
+    public V insert(K key, V value) {
+    	if (key == null || value == null) {
+    		throw new IllegalArgumentException();
+    	}
+    	size++;
+    	HashTrieNode temp = (HashTrieNode)this.root;
+    	Iterator<A> iter = key.iterator();
+    	for (int i = 0; i < key.size(); i ++) {
+    		A iterVal = iter.next();
+    		if (temp.pointers.get(iterVal) == null) {
+    			temp.pointers.put(iterVal, new HashTrieNode());
+    		}
+    		temp = temp.pointers.get(iterVal);
+    	}
+    	V currentValue = temp.value;
+		temp.value = value;
+    	if (currentValue == null) {
+    		return null;
+    	}
+    	return currentValue;
+    }
+
+    @Override
+    public V find(K key) {
+    	if (key == null) {
+    		throw new IllegalArgumentException();
+    	}
+        HashTrieNode temp = search(key);
+        if (temp == null) {
+        	return null;
+        }
+        return temp.value;
+    }
+
+    @Override
+    public boolean findPrefix(K key) {
+        if (key == null) {
+        	throw new IllegalArgumentException();
+        }
+        HashTrieNode temp = search(key);
+        return (temp != null && (!temp.pointers.isEmpty() || temp.value != null));
+    }
+    
+    @SuppressWarnings("unchecked")
+	private HashTrieNode search(K key) {
+    	HashTrieNode temp = (HashTrieMap<A, K, V>.HashTrieNode) this.root;
+    	Iterator<A> iter = key.iterator();
+    	for (int i = 0; i < key.size(); i ++) {
+    		A iterVal = iter.next();
+    		if (temp.pointers.get(iterVal) == null) {
+    			return null;
+    		}
+    		temp = temp.pointers.get(iterVal);
+    	}
+    	return temp;
+    }
+
+    @SuppressWarnings("unchecked")
+	@Override
+    public void delete(K key) {
+    	if (key == null) {
+    		throw new IllegalArgumentException();
+    	}
+    	HashTrieNode temp = (HashTrieMap<A, K, V>.HashTrieNode) this.root;
+    	Iterator<A> iter = key.iterator();
+    	HashTrieNode lastSplit = (HashTrieMap<A, K, V>.HashTrieNode) this.root;
+    	A lastTrans = null;
+    	for (int i = 0; i < key.size(); i++) {
+    		if (temp == null) {
+    			return;
+    		}
+    		A iterVal = iter.next();
+    		if (temp.value != null || temp.pointers.size() > 1) {
+    			lastSplit = temp;
+    			lastTrans = iterVal;
+    		}
+    		temp = temp.pointers.get(iterVal);
+    	}
+    	if (temp != null && temp.value != null) {
+    		if (temp.pointers.isEmpty() && lastTrans != null) {
+    			lastSplit.pointers.remove(lastTrans);
+    			size--;
+    		} else if (temp.pointers.isEmpty() && lastTrans == null) {
+    			this.clear();
+    		} else {
+        		temp.value = null;
+    		}
+    	}
+    }
+
+    @Override
+    public void clear() {
+        this.root = new HashTrieNode();
+        this.size = 0;
+    }
+}
