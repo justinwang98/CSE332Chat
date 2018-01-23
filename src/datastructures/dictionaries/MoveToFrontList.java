@@ -28,8 +28,6 @@ import datastructures.worklists.ListFIFOQueue.ListNode;
 public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
     
     private Node front;
-    private Node back;
-    private Node currentNode;
     
     //list node class
     public class Node {
@@ -51,55 +49,107 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
     
     @Override
     public V insert(K key, V value) {
+        //put in data in new node
+        Node newNode = new Node(new Item<K, V>(key, value));
         if (front == null) {
-            front = new Node(new Item<K, V>(key,value));
-            back = front;
+            front = newNode;
             return front.data.value;
-        } else {
-            V temp = back.data.value;
-            back.next = new Node(new Item<K, V>(key,value));
-            back = back.next;
-            return temp;
-        }      
+        }
+        else {
+            Node pointer = front;
+            boolean isExist = true;
+            while (!pointer.data.key.equals(key)) {
+                if (pointer.next == null) {
+                    isExist = false;
+                    break;
+                }
+                pointer = pointer.next;
+            }
+            
+            if (isExist) {
+                V temp = pointer.data.value;
+                
+                return temp;
+            }
+            else {
+                newNode.next = front;
+                front = newNode;
+                return front.data.value;
+            } 
+        }
     }
 
     @Override
     public V find(K key) {
-        Node pointer = front;
-        while (pointer.data.key != key) {
+        Node previous = front;
+        Node current = front;
+        while(current != null){
+            if(key.equals(current.data.key)){
+                //Found the item
+                previous.next=current.next;
+                current.next=front;
+                front=current;
+                return front.data.value;
+            }
+            previous = current;
+            current=current.next;
+        }
+        return null;
+    
+        /*Node pointer = front;
+        while (!pointer.data.key.equals(key)) {
+            if (pointer.next == null) {
+                return null;
+            }
             pointer = pointer.next;
         }
+        pointer.next = front;
         front = pointer;
-        currentNode.next = front;
-        return front.data.value;
+        return front.data.value;*/
+        
+//        if (front == null || key == null) {
+//            return null;
+//        }
+//        
+//        Node pointerFirst = null;
+//        Node pointerSecond = front;
+//        //keep moving through the list if you have not found the key
+//        while (!(pointerSecond.data.key.equals(key))) {
+//            //make sure list has next
+//            if (pointerSecond.next == null) {
+//                return null;
+//            }
+//            
+//            pointerFirst = pointerSecond;
+//            pointerSecond = pointerSecond.next;
+//        }
+//        
+//        Node temp = pointerSecond;
+//        //connect the two nodes together
+//        pointerFirst.next = pointerSecond.next;
+//        //move the node to the front
+//        temp.next = front;
+//        front = temp;
+//        return front.data.value;
     }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
         return new Iterator<Item<K, V>>() {
-            Node currentNode = null;
+            Node iterate = front;
+            
             @Override
             public boolean hasNext() {
-                if (front == null) {
-                    return false;
-                }
-                if (back.next == null) {
-                    return false;
-                }
-                return true;
+                return iterate != null;
             }
             @Override
             public Item<K, V> next() {
-                if (front == null){
-                    throw new NoSuchElementException();
-                } else if (currentNode == null) {
-                    this.currentNode = front;
-                    return currentNode.data;
-                } else if (currentNode.next == null) {
-                    throw new NoSuchElementException();
+                if (!hasNext()) {
+                    throw new java.util.NoSuchElementException();
                 }
-                this.currentNode = currentNode.next;
-                return currentNode.data;
+                Item<K, V> item = new Item<K,V>(iterate.data.key, iterate.data.value);
+                iterate = iterate.next;
+                return item;
             }
         };
     }  
