@@ -8,7 +8,7 @@ import tests.TestsUtility;
 
 public class MoveToFrontListTests extends TestsUtility {
     public static void main(String[] args) {
-	new MoveToFrontListTests().run();
+        new MoveToFrontListTests().run();
     }
 
     @Override
@@ -54,7 +54,6 @@ public class MoveToFrontListTests extends TestsUtility {
 	MoveToFrontList<String, Integer> list = new MoveToFrontList<>();
 
 	int n = 1000;
-
 	// Add them
 	for (int i = 0; i < 5 * n; i++) {
 	    int k = (i % n) * 37 % n;
@@ -69,7 +68,7 @@ public class MoveToFrontListTests extends TestsUtility {
 	    passed &= (Integer.parseInt(dc.key) + 1) * 5 == dc.value;
 	    totalCount += dc.value;
 	}
-
+	
 	// Check sizes
 	passed &= totalCount == (n * (n + 1)) / 2 * 5;
 	passed &= list.size() == n;

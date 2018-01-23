@@ -32,6 +32,7 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
     //list node class
     public class Node {
             
+
             public Item<K,V> data;       // data stored in this node
             public Node next;  // link to next node in the list
     
@@ -124,47 +125,9 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             
     }
     
-        /*Node pointer = front;
-        while (!pointer.data.key.equals(key)) {
-            if (pointer.next == null) {
-                return null;
-            }
-            pointer = pointer.next;
-        }
-        pointer.next = front;
-        front = pointer;
-        return front.data.value;*/
-        
-//        if (front == null || key == null) {
-//            return null;
-//        }
-//        
-//        Node pointerFirst = null;
-//        Node pointerSecond = front;
-//        //keep moving through the list if you have not found the key
-//        while (!(pointerSecond.data.key.equals(key))) {
-//            //make sure list has next
-//            if (pointerSecond.next == null) {
-//                return null;
-//            }
-//            
-//            pointerFirst = pointerSecond;
-//            pointerSecond = pointerSecond.next;
-//        }
-//        
-//        Node temp = pointerSecond;
-//        //connect the two nodes together
-//        pointerFirst.next = pointerSecond.next;
-//        //move the node to the front
-//        temp.next = front;
-//        front = temp;
-//        return front.data.value;
-    
-
-    @Override
     public Iterator<Item<K, V>> iterator() {
         return new Iterator<Item<K, V>>() {
-            Node iterate = front;
+            Node iterate = null;
             
             @Override
             public boolean hasNext() {
@@ -172,8 +135,12 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
             }
             @Override
             public Item<K, V> next() {
+                if (iterate == null) {
+                    iterate = front;
+                    return iterate.data;
+                }
                 if (!hasNext()) {
-                    throw new java.util.NoSuchElementException();
+                    throw new NoSuchElementException();
                 }
                 Item<K, V> item = new Item<K,V>(iterate.data.key, iterate.data.value);
                 iterate = iterate.next;
