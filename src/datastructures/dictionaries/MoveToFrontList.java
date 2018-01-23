@@ -45,56 +45,84 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
                 this.data = data;
                 this.next = next;
             }
-        }
+    }
     
     @Override
+    //insert a new node at the front.
+    //if key already exists, update the value and move it to the front.
     public V insert(K key, V value) {
         //put in data in new node
         Node newNode = new Node(new Item<K, V>(key, value));
+        //create pointer
+        Node previousPointer = front;
+        Node currentPointer = front;
+        //if list is empty, just insert the new node.
+        if (key == null || value == null) {
+            throw new IllegalArgumentException();
+        }
         if (front == null) {
             front = newNode;
-            return front.data.value;
+            return null;
         }
         else {
-            Node pointer = front;
-            boolean isExist = true;
-            while (!pointer.data.key.equals(key)) {
-                if (pointer.next == null) {
-                    isExist = false;
-                    break;
+            //check whether it exists.
+            while (!currentPointer.data.key.equals(key)) {
+                //if next is null, that means key does not exist, so just insert to the front
+                if (currentPointer.next == null) {
+                    newNode.next = front;
+                    front = newNode;
+                    return value;
                 }
-                pointer = pointer.next;
+                previousPointer = currentPointer;
+                currentPointer = currentPointer.next;
             }
-            
-            if (isExist) {
-                V temp = pointer.data.value;
-                
-                return temp;
-            }
-            else {
-                newNode.next = front;
-                front = newNode;
-                return front.data.value;
-            } 
+            //if while loop ends, that means the key exist
+            //move it to the front
+            V tempValue = currentPointer.data.value;
+            newNode.next = front;
+            front = newNode;
+            //connect the hole left by the Item
+            previousPointer.next = currentPointer.next;
+            return tempValue;
         }
     }
 
     @Override
+    /**
+     * Returns the value to which the specified key is mapped, or {@code null}
+     * if this map contains no mapping for the key.
+     *
+     * @param key
+     *            the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or {@code null}
+     *         if this map contains no mapping for the key
+     * @throws IllegalArgumentException
+     *             if key is null.
+     */
     public V find(K key) {
-        Node previous = front;
-        Node current = front;
-        while(current != null){
-            if(key.equals(current.data.key)){
-                //Found the item
-                previous.next=current.next;
-                current.next=front;
-                front=current;
-                return front.data.value;
-            }
-            previous = current;
-            current=current.next;
+        if (key == null) {
+            throw new IllegalArgumentException();
         }
-        return null;
+        if (front == null) {
+            return null;
+        }
+        Node previousPointer = front;
+        Node currentPointer = front;
+        while (!currentPointer.data.key.equals(key)) {
+            if (currentPointer.next == null) {
+                return null;
+            }
+            previousPointer = currentPointer;
+            currentPointer = currentPointer.next;
+        }
+        Node temp = currentPointer;
+        temp.next = front;
+        front = temp;
+        //connect the hole left by the Item
+        previousPointer.next = currentPointer.next;
+        return front.data.value;
+            
+    }
     
         /*Node pointer = front;
         while (!pointer.data.key.equals(key)) {
@@ -131,7 +159,7 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
 //        temp.next = front;
 //        front = temp;
 //        return front.data.value;
-    }
+    
 
     @Override
     public Iterator<Item<K, V>> iterator() {
