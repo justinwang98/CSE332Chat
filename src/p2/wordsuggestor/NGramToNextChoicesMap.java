@@ -31,12 +31,11 @@ public class NGramToNextChoicesMap {
         AlphabeticString aWord = new AlphabeticString(word);
         if (map.find(ngram) == null) { // if ngram is not there
             map.insert(ngram, newInner.get()); // insert ngram
-        } else { // if ngram is there
-            if (map.find(ngram).find(aWord) == null) { // word is not there
-                map.find(ngram).insert(aWord, 1);
-            } else { // word is there, then increment by one
-                map.find(ngram).insert(aWord, map.find(ngram).find(aWord) + 1);
-            }
+        }
+        if (map.find(ngram).find(aWord) == null) { // word is not there
+            map.find(ngram).insert(aWord, 1);
+        } else { // word is there, then increment by one
+            map.find(ngram).insert(aWord, map.find(ngram).find(aWord) + 1);
         }
     }
 
