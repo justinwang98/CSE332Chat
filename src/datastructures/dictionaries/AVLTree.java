@@ -40,10 +40,13 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     public class AVLNode extends BSTNode {
         
         protected int height;
+        AVLNode parent;
 
-        public AVLNode(K key, V value) {
+        public AVLNode(K key, V value, AVLNode parent) {
             super(key, value);
             height = 0;
+            this.parent = parent;
+            
         }  
 
     }
@@ -82,7 +85,7 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         
         //if key does not exist, we have to insert the node
         if (value != null) {
-            current = new AVLNode(key, value);
+            current = new AVLNode(key, value, prev);
             if (this.root == null) {
                 this.root = current;
             }
@@ -90,6 +93,7 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
                 assert(child >= 0); // child should have been set in the loop
                                     // above
                 prev.children[child] = current;
+                current.parent = prev;
             }
             this.size++;
             
@@ -174,16 +178,21 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     //left subtree of left child
     public AVLNode rightRotation(AVLNode node) {
         
-        
         AVLNode newParent = (AVLNode) node.children[0];
         AVLNode temp = (AVLNode) newParent.children[1];
         
+        
         if (this.root.equals(node)) {
+            newParent.children[1] = node;
             this.root = newParent;
-            
+            newParent.parent = null;
+        }
+        else {
+            newParent.parent = node.parent;
+            newParent.children[1] = node;
         }
         
-        newParent.children[1] = node;
+        node.parent = newParent;
         node.children[0] = temp;
         
         node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
@@ -198,13 +207,21 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         AVLNode newParent = (AVLNode) node.children[1];
         AVLNode temp = (AVLNode) newParent.children[0];
         
+        
         if (this.root.equals(node)) {
+            newParent.children[0] = node;
             this.root = newParent;
-            
+            newParent.parent = null;
+        }
+        else {
+            newParent.parent = node.parent;
+            newParent.children[0] = node;
         }
         
-        newParent.children[0] = node;
         node.children[1] = temp;
+        node.parent = newParent;
+        
+        
         
         node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
         newParent.height = Math.max(height((AVLNode) newParent.children[0]), height((AVLNode) newParent.children[1])) + 1;
