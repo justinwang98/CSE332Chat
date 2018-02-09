@@ -41,65 +41,65 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         
         protected int height;
         AVLNode parent;
+        int balanceFactor;
 
         public AVLNode(K key, V value, AVLNode parent) {
             super(key, value);
             height = 0;
-            this.parent = parent;
-            
+            this.parent = parent; 
         }  
-
     }
-    
-    //returns the height of a node using recursion
-    public int height(AVLNode node)
-    {
 
+    public int height(AVLNode node) {
         if (node == null) {
             return -1;
         }
-        //returns the height of the parent, which is 1 greater than the higher subtree
-        return Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
+        return node.height;
     }
     
-    protected AVLNode find(K key, V value) {
-        AVLNode prev = null;
-        AVLNode current = (AVLNode) this.root;
 
-        int child = -1;
-
-        while (current != null) {
-            int direction = Integer.signum(key.compareTo(current.key));
-
-            // We found the key!
-            if (direction == 0) {
-                return current;
+    public void updateHeight(AVLNode node) {
+        if (node != null) {
+            node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
+        }
+    }
+    
+    public void setBalance(AVLNode node) {
+            updateHeight(node);
+            node.balanceFactor = height((AVLNode) node.children[0]) - height((AVLNode) node.children[1]);
+    }
+    
+    public void doRotation(AVLNode node) {
+        setBalance(node);
+        
+        //left subtree is taller
+        if (node.balanceFactor == -2) {
+            //single rightRotation
+            if (height((AVLNode) node.children[1].children[1]) >= height((AVLNode) node.children[1].children[0])) {
+                node = leftRotation(node);
             }
             else {
-                // direction + 1 = {0, 2} -> {0, 1}
-                child = Integer.signum(direction + 1);
-                prev = current;
-                current = (AVLNode) current.children[child];
+                node = rightLeftRotation(node);
             }
         }
         
-        //if key does not exist, we have to insert the node
-        if (value != null) {
-            current = new AVLNode(key, value, prev);
-            if (this.root == null) {
-                this.root = current;
+        //right subtree is taller
+        if (node.balanceFactor == 2) {
+            //single leftRotation
+            if (height((AVLNode) node.children[0].children[0]) >= height((AVLNode) node.children[0].children[1])) {
+                node = rightRotation(node);
             }
             else {
-                assert(child >= 0); // child should have been set in the loop
-                                    // above
-                prev.children[child] = current;
-                current.parent = prev;
+                node = leftRightRotation(node);
             }
-            this.size++;
-            
         }
-        //return the inserted node
-        return current;
+        
+        if (node.parent != null) {
+            doRotation(node.parent);
+        }
+        else {
+            this.root = node;
+        }
     }
     
     @Override 
@@ -109,159 +109,121 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             throw new IllegalArgumentException();
         }
            
-        AVLNode insertedNode = find(key,value);
-        V oldValue = insertedNode.value;
-        insertedNode.value = value;
-        AVLNode problematicNode = verifyAVLBalance((AVLNode)this.root);
-        
-        if (problematicNode == null) {
-            return value;
+        if (this.root == null) {
+            this.root = new AVLNode(key, value, null);
+            this.size++;
         }
         else {
-          //if left subtree is taller than right subtree
-            if (height((AVLNode) problematicNode.children[0]) > height((AVLNode) problematicNode.children[1])) {
+            AVLNode current = (AVLNode) this.root;
+            while (current.key != null) {
                 
-                //if left sub-subtree is taller than right sub-subtree
-                if (height((AVLNode) problematicNode.children[0].children[0]) > height((AVLNode) problematicNode.children[0].children[1])) {
-                    rightRotation(problematicNode);
+                if(current.key.equals(key)) {
+                    current.value = value;
+                    break;
                 }
                 
-                //if right sub-subtree is taller than left sub-subtree
+                AVLNode previous = current;
+                
+                boolean directionLeft = current.key.compareTo(key) > 0;
+                if (directionLeft) {
+                    current = (AVLNode) current.children[0];
+                }
                 else {
-                    leftRightRotation(problematicNode);
+                    current = (AVLNode) current.children[1];
                 }
                 
-            }
-            // if right subtree is taller than left subtree
-            else {
-                
-                //if right sub-subtree is taller than left sub-subtree
-                if (height((AVLNode) problematicNode.children[1].children[1]) > height((AVLNode) problematicNode.children[1].children[0])) {
-                    leftRotation(problematicNode);
+                if (current == null) {
+                    if (directionLeft) {
+                        previous.children[0] = new AVLNode(key, value, previous);
+                        this.size++;
+                    }
+                    else {
+                        previous.children[1] = new AVLNode(key, value, previous);
+                        this.size++;
+                    }
+                    doRotation(previous);
+                    break;
                 }
-                
-                //if left sub-subtree is taller than right sub-subtree
-                else {
-                    rightLeftRotation(problematicNode);
-                }                 
             }
-        
-        return value;    
         }
+        return value;
     }
             
             
             
-    
-    //find the problematic node
-    //check AVL balance condition: height difference between left and right subtree cannot be greater than 1.
-    public AVLNode verifyAVLBalance(AVLNode node) {
-        
-        if (node != null) {
-            AVLNode previous = null;
-            while (Math.abs(height((AVLNode)node.children[0]) - height((AVLNode)node.children[1])) > 1) {
-                
-                if (height((AVLNode)node.children[0]) > height((AVLNode)node.children[1])) {
-                    previous = node;
-                    node = (AVLNode)node.children[0];
-                }
-                else {
-                    previous = node;
-                    node = (AVLNode)node.children[1];
-                }
-            }
-            return previous;
-        }
-        return null;
-    }
     
     //left subtree of left child
-    public AVLNode rightRotation(AVLNode node) {
+    public AVLNode leftRotation(AVLNode node) {
         
-        AVLNode newParent = (AVLNode) node.children[0];
-        AVLNode temp = (AVLNode) newParent.children[1];
+        AVLNode newParent = (AVLNode) node.children[1];
+        newParent.parent = node.parent;
         
+        node.children[1] = (AVLNode) newParent.children[0];
         
-        if (this.root.equals(node)) {
-            newParent.children[1] = node;
-            this.root = newParent;
-            newParent.parent = null;
-        }
-        else {
-            newParent.parent = node.parent;
-            newParent.children[1] = node;
+        if ((AVLNode) node.children[1] != null) {
+            AVLNode temp = (AVLNode) node.children[1];
+            temp.parent = node;
         }
         
+        newParent.children[0] = node;
         node.parent = newParent;
-        node.children[0] = temp;
         
-        node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
-        newParent.height = Math.max(height((AVLNode) newParent.children[0]), height((AVLNode) newParent.children[1])) + 1;
+        if (newParent.parent != null) {
+            if (newParent.parent.children[1].equals(node)) {
+                newParent.parent.children[1] = newParent;
+            }
+            else {
+                newParent.parent.children[0] = newParent;
+            }
+        }
+        
+        setBalance(node);
+        setBalance(newParent);
         
         return newParent;
     }
     
     //right subtree of right child
-    public AVLNode leftRotation(AVLNode node) {
+    public AVLNode rightRotation(AVLNode node) {
         
-        AVLNode newParent = (AVLNode) node.children[1];
-        AVLNode temp = (AVLNode) newParent.children[0];
+        AVLNode newParent = (AVLNode) node.children[0];
+        newParent.parent = node.parent;
         
+        node.children[0] = (AVLNode) newParent.children[1];
         
-        if (this.root.equals(node)) {
-            newParent.children[0] = node;
-            this.root = newParent;
-            newParent.parent = null;
-        }
-        else {
-            newParent.parent = node.parent;
-            newParent.children[0] = node;
+        if ((AVLNode) node.children[0] != null) {
+            AVLNode temp = (AVLNode) node.children[0];
+            temp.parent = node;
         }
         
-        node.children[1] = temp;
+        newParent.children[1] = node;
         node.parent = newParent;
         
+        if (newParent.parent != null) {
+            if (newParent.parent.children[1].equals(node)) {
+                newParent.parent.children[1] = newParent;
+            }
+            else {
+                newParent.parent.children[0] = newParent;
+            }
+        }
         
-        
-        node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
-        newParent.height = Math.max(height((AVLNode) newParent.children[0]), height((AVLNode) newParent.children[1])) + 1;
-        
+        setBalance(node);
+        setBalance(newParent);
+       
         return newParent;
     }
     
     //right subtree of left child
     public AVLNode rightLeftRotation(AVLNode node) {
         node.children[1] = rightRotation((AVLNode) node.children[1]);
-        
         return leftRotation(node);
     }
     
     //right subtree of left child
     public AVLNode leftRightRotation(AVLNode node) {
         node.children[0] = leftRotation((AVLNode) node.children[0]);
-        
         return rightRotation(node);
     }
-        
-        //traverse the AVLTree to find where the node should go,
-        //insert the node there
-        //verifyAVL balance to find out which node the problem is at
-        //if not balanced, determine which rotation case it is by finding which subtree the inserted node is in
-        //call the helper method for the specific rotation case
-        
-        //think about it slowly,
-        //changing of pointers
-        //for kinks, you have to move nodes, so use a temp
-        
-        /*
-         * Helper methods:
-         * 
-         * 1) height(node) : to return height of the node
-         * 2) verifyBalance(root) : similar to Ex08, check whether balance factor of a node is more than 1
-         * 3) rotateLeft(node) : case 1 rotation
-         * 4) rotateLeftRight(node) : case 2 rotation, just call rotateLeft then rotateRight
-         * 5) rotateRightLeft(node) : case 3 rotation, just call rotateRight then rotateLeft
-         * 4) rotateRight(node) : case 4 rotation
-         */
     
 }
