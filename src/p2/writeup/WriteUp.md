@@ -16,12 +16,14 @@ the problem visually. However, it was really hard to keep track of all the chang
 and the heavy use of recursion in both parts made debugging really confusing and tedious.
 
 - How could the project be improved? Why?
+- 
   This project felt a little rushed, especially considering the fact that there were midterms in
 between. I know the two weeks before checkpoint 2 already took this into account, but nonetheless
 it ultimately still was not enough to complete checkpoint 2, especially because of the long debugging
 process for AVLTree.
 
 - Did you enjoy the project?  Why or why not?
+- 
   Yes, I enjoyed this project a lot, even more so than project 1. This idea of building uMessage was really exciting,
 and implementing the data structures and sorts was a blast. It felt great to use all our knowledge from class and the last
 six weeks to make something that is relevant in today's world.
