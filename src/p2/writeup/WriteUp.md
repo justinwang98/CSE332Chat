@@ -3,16 +3,28 @@
 
 ## Project Enjoyment ##
 - What was your favorite part of the project? Why?
-  <pre>TODO</pre>
+  
+Our favorite part was using the knowledge we got in class to implement the different data
+structures and sorts. It was really cool to have the feeling that the things we learnt in class
+was important and useful.
 
 - What was your least favorite part of the project? Why?
-  <pre>TODO</pre>
+  
+Debugging AVLTree and quicksort was a nightmare, each in its own way. Having learnt how to use
+the visualizer recently, it helped me out alot in the debugging process, being able to locate 
+the problem visually. However, it was really hard to keep track of all the changing of pointers
+and the heavy use of recursion in both parts made debugging really confusing and tedious.
 
 - How could the project be improved? Why?
-  <pre>TODO</pre>
+  This project felt a little rushed, especially considering the fact that there were midterms in
+between. I know the two weeks before checkpoint 2 already took this into account, but nonetheless
+it ultimately still was not enough to complete checkpoint 2, especially because of the long debugging
+process for AVLTree.
 
 - Did you enjoy the project?  Why or why not?
-  <pre>TODO</pre>
+  Yes, I enjoyed this project a lot, even more so than project 1. This idea of building uMessage was really exciting,
+and implementing the data structures and sorts was a blast. It felt great to use all our knowledge from class and the last
+six weeks to make something that is relevant in today's world.
     
 -----
 
