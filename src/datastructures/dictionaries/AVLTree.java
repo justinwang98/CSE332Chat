@@ -34,6 +34,7 @@ import cse332.datastructures.trees.BinarySearchTree.BSTNode;
 public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V>  {
     
     public AVLTree() {
+        
         super();
     }
     
@@ -41,67 +42,20 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         
         protected int height;
         AVLNode parent;
+        //difference between height of left and right subtree
         int balanceFactor;
 
+        //constructor for AVLNode
         public AVLNode(K key, V value, AVLNode parent) {
+            
             super(key, value);
             height = 0;
             this.parent = parent; 
+            
         }  
     }
-
-    public int height(AVLNode node) {
-        if (node == null) {
-            return -1;
-        }
-        return node.height;
-    }
     
-
-    public void updateHeight(AVLNode node) {
-        if (node != null) {
-            node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
-        }
-    }
-    
-    public void setBalance(AVLNode node) {
-            updateHeight(node);
-            node.balanceFactor = height((AVLNode) node.children[0]) - height((AVLNode) node.children[1]);
-    }
-    
-    public void doRotation(AVLNode node) {
-        setBalance(node);
-        
-        //left subtree is taller
-        if (node.balanceFactor == -2) {
-            //single rightRotation
-            if (height((AVLNode) node.children[1].children[1]) >= height((AVLNode) node.children[1].children[0])) {
-                node = leftRotation(node);
-            }
-            else {
-                node = rightLeftRotation(node);
-            }
-        }
-        
-        //right subtree is taller
-        if (node.balanceFactor == 2) {
-            //single leftRotation
-            if (height((AVLNode) node.children[0].children[0]) >= height((AVLNode) node.children[0].children[1])) {
-                node = rightRotation(node);
-            }
-            else {
-                node = leftRightRotation(node);
-            }
-        }
-        
-        if (node.parent != null) {
-            doRotation(node.parent);
-        }
-        else {
-            this.root = node;
-        }
-    }
-    
+    //insert node
     @Override 
     public V insert(K key, V value) {
         
@@ -109,6 +63,7 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             throw new IllegalArgumentException();
         }
            
+        //if no nodes, make new node in root
         if (this.root == null) {
             this.root = new AVLNode(key, value, null);
             this.size++;
@@ -148,9 +103,76 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         }
         return value;
     }
+
+    //returns the height of the node
+    public int height(AVLNode node) {
+        
+        if (node == null) {
+            return -1;
+        }
+        
+        return node.height;
+    }
+    
+    //update the height of the node by calling height recursively on the subtrees
+    public void updateHeight(AVLNode node) {
+        
+        if (node != null) {
+            node.height = Math.max(height((AVLNode) node.children[0]), height((AVLNode) node.children[1])) + 1;
+        }
+        
+    }
+    
+    //setting the balance factor of each node
+    public void setBalance(AVLNode node) {
+        
+            //first update the height of the node correctly first
+            updateHeight(node);
+
+            node.balanceFactor = height((AVLNode) node.children[0]) - height((AVLNode) node.children[1]);
+    }
+    
+    //find out which rotation needs to be done, and rotate
+    public void doRotation(AVLNode node) {
+        
+        //update the balance factor of the node first
+        setBalance(node);
+        
+        //left subtree is taller
+        if (node.balanceFactor == -2) {
             
+            //case 1
+            if (height((AVLNode) node.children[1].children[1]) >= height((AVLNode) node.children[1].children[0])) {
+                node = leftRotation(node);
+            }
+            //case 2
+            else {
+                node = rightLeftRotation(node);
+            }
+        }
+        
+        //right subtree is taller
+        if (node.balanceFactor == 2) {
             
-            
+            //case 4
+            if (height((AVLNode) node.children[0].children[0]) >= height((AVLNode) node.children[0].children[1])) {
+                node = rightRotation(node);
+            }
+            //case 3
+            else {
+                node = leftRightRotation(node);
+            }
+        }
+        
+        if (node.parent != null) {
+            doRotation(node.parent);
+        }
+        //if there's only one node
+        else {
+            this.root = node;
+        }
+        
+    }
     
     //left subtree of left child
     public AVLNode leftRotation(AVLNode node) {
@@ -161,14 +183,17 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         node.children[1] = (AVLNode) newParent.children[0];
         
         if ((AVLNode) node.children[1] != null) {
+            
             AVLNode temp = (AVLNode) node.children[1];
             temp.parent = node;
+            
         }
         
         newParent.children[0] = node;
         node.parent = newParent;
         
         if (newParent.parent != null) {
+            
             if (newParent.parent.children[1].equals(node)) {
                 newParent.parent.children[1] = newParent;
             }
@@ -177,6 +202,7 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             }
         }
         
+        //update balance factor of both nodes
         setBalance(node);
         setBalance(newParent);
         
@@ -192,14 +218,17 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
         node.children[0] = (AVLNode) newParent.children[1];
         
         if ((AVLNode) node.children[0] != null) {
+            
             AVLNode temp = (AVLNode) node.children[0];
             temp.parent = node;
+            
         }
         
         newParent.children[1] = node;
         node.parent = newParent;
         
         if (newParent.parent != null) {
+            
             if (newParent.parent.children[1].equals(node)) {
                 newParent.parent.children[1] = newParent;
             }
@@ -208,6 +237,7 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             }
         }
         
+        //update balance factor of both nodes
         setBalance(node);
         setBalance(newParent);
        
@@ -216,12 +246,14 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     
     //right subtree of left child
     public AVLNode rightLeftRotation(AVLNode node) {
+        
         node.children[1] = rightRotation((AVLNode) node.children[1]);
         return leftRotation(node);
     }
     
     //right subtree of left child
     public AVLNode leftRightRotation(AVLNode node) {
+        
         node.children[0] = leftRotation((AVLNode) node.children[0]);
         return rightRotation(node);
     }
