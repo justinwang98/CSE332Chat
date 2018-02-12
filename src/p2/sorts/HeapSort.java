@@ -2,6 +2,7 @@ package p2.sorts;
 
 import java.util.Comparator;
 import cse332.exceptions.NotYetImplementedException;
+import datastructures.worklists.MinFourHeap;
 
 public class HeapSort {
     public static <E extends Comparable<E>> void sort(E[] array) {
@@ -9,6 +10,20 @@ public class HeapSort {
     }
 
     public static <E> void sort(E[] array, Comparator<E> comparator) {
-        throw new NotYetImplementedException();
+        
+        int size = array.length;
+        
+        MinFourHeap heap = new MinFourHeap(comparator);
+        
+        //add them into heap
+        for (int i = 0; i < size; i++) {
+            heap.add(array[i]);
+        }
+        
+        //deleteMin
+        for (int i = 0; i < size; i++) {
+            array[i] = (E) heap.next();
+        }
+        
     }
 }
