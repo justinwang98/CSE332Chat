@@ -1,5 +1,6 @@
 package datastructures.dictionaries;
 
+
 import cse332.datastructures.trees.BinarySearchTree;
 import cse332.datastructures.trees.BinarySearchTree.BSTNode;
 
@@ -187,23 +188,22 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             
         }
         
-        
         if (newParent.parent != null) {
             
-            if (newParent.parent.children[1].equals(node)) {
-                newParent.parent.children[1] = newParent;
-            }
-            else {
+            if (newParent.parent.children[0].equals(node)) {
                 newParent.parent.children[0] = newParent;
             }
+            else {
+                newParent.parent.children[1] = newParent;
+            }
         }
-        
-        newParent.children[0] = node;
-        node.parent = newParent;
         
         //update balance factor of both nodes
         setBalance(node);
         setBalance(newParent);
+        
+        newParent.children[0] = node;
+        node.parent = newParent;
         
         return newParent;
     }
