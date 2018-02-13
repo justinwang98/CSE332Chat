@@ -1,6 +1,9 @@
 package datastructures.dictionaries;
 
+import java.lang.reflect.Array;
+
 import cse332.datastructures.trees.BinarySearchTree;
+import cse332.datastructures.trees.BinarySearchTree.BSTNode;
 
 /**
  * TODO: Replace this comment with your own as appropriate.
@@ -53,7 +56,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //insert node
-    @SuppressWarnings("unchecked")
     @Override 
     public V insert(K key, V value) {
         
@@ -113,7 +115,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //update the height of the node by calling height recursively on the subtrees
-    @SuppressWarnings("unchecked")
     public void updateHeight(AVLNode node) {
         
         if (node != null) {
@@ -123,7 +124,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //setting the balance factor of each node
-    @SuppressWarnings("unchecked")
     public void setBalance(AVLNode node) {
         
             //first update the height of the node correctly first
@@ -133,7 +133,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //find out which rotation needs to be done, and rotate
-    @SuppressWarnings("unchecked")
     public void doRotation(AVLNode node) {
         
         //update the balance factor of the node first
@@ -176,7 +175,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //left subtree of left child
-    @SuppressWarnings("unchecked")
     public AVLNode leftRotation(AVLNode node) {
         
         AVLNode newParent = (AVLNode) node.children[1];
@@ -191,8 +189,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             
         }
         
-        newParent.children[0] = node;
-        node.parent = newParent;
         
         if (newParent.parent != null) {
             
@@ -204,6 +200,9 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
             }
         }
         
+        newParent.children[0] = node;
+        node.parent = newParent;
+        
         //update balance factor of both nodes
         setBalance(node);
         setBalance(newParent);
@@ -212,7 +211,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //right subtree of right child
-    @SuppressWarnings("unchecked")
     public AVLNode rightRotation(AVLNode node) {
         
         AVLNode newParent = (AVLNode) node.children[0];
@@ -248,7 +246,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //right subtree of left child
-    @SuppressWarnings("unchecked")
     public AVLNode rightLeftRotation(AVLNode node) {
         
         node.children[1] = rightRotation((AVLNode) node.children[1]);
@@ -256,7 +253,6 @@ public class AVLTree<K extends Comparable<K>, V> extends BinarySearchTree<K, V> 
     }
     
     //right subtree of left child
-    @SuppressWarnings("unchecked")
     public AVLNode leftRightRotation(AVLNode node) {
         
         node.children[0] = leftRotation((AVLNode) node.children[0]);
