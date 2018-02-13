@@ -1,5 +1,6 @@
 package datastructures.worklists;
 
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 import cse332.interfaces.worklists.PriorityWorkList;
@@ -8,17 +9,19 @@ import cse332.interfaces.worklists.PriorityWorkList;
  * See cse332/interfaces/worklists/PriorityWorkList.java
  * for method specifications.
  */
-public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
+public class MinFourHeap<E> extends PriorityWorkList<E> {
     /* Do not change the name of this field; the tests rely on it to work correctly. */
     private E[] data;
     private int size;
+    private Comparator c;
     
 	@SuppressWarnings("unchecked")
-	public MinFourHeap() {
+	public MinFourHeap(Comparator c) {
     	data = (E[])new Comparable[10];
     	size = 0;
+    	this.c = c;
     }
-
+	
     @Override
     public boolean hasWork() {
     	return this.size() > 0;
@@ -78,7 +81,7 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     
     private int percolateUp(int hole, E work) {	
     	//while node is not the top most node and priority value of node is less than its parent;
-    	while (hole > 0 && work.compareTo(data[(hole - 1) / 4]) < 0) {
+    	while (hole > 0 &&  c.compare(work, data[(hole - 1) / 4]) < 0) {
     		data[hole] = data[(hole - 1) / 4];
     		hole = (hole - 1) / 4;
     	}
@@ -92,12 +95,12 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     	int min = 4 * hole + 1;
   		int small = 4 * hole + 1;
     		for (int i = small; i < small + 4 && i < size; i++) {
-    			if (data[i].compareTo(data[min]) < 0) {
+    			if (c.compare(data[i],data[min]) < 0) {
     				min = i;
     			}
     		}
     		
-    		if (data[min].compareTo(work) < 0) {
+    		if (c.compare(data[min],work) < 0) {
     			data[hole] = data[min];
     			hole = min;
     		} else {
@@ -106,4 +109,5 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     	}
     	return hole;
     }
+
 }
