@@ -70,7 +70,7 @@ AVLTree is significantly faster than BST. We can see a trend that shows the runt
 the runtime of BST increases quadratically. My intuition for the results is that since AVLTree is self-balancing, it usually is a
 shallower tree than BST, which means less comparisons, especially in sorted numbers. For example, if we have sorted numbers and we want
 to insert 8, we would have to traverse down 7 times to do 7 comparisons in order to insert 8 into a BST. However, for AVLTree we only
-have to traverse down 3 times to do 3 comparisons.
+have to traverse down 3 times to do 3 comparisons. Thus, AVLTree is asymptotically much superior than BST.
 
 ### ChainingHashTable ###
 Your ChainingHashTable should take as an argument to its constructor the type of "chains" it uses.  Determine
@@ -88,7 +88,13 @@ why your results are what they are.
 ### General Purpose Dictionary ###
 Compare BST, AVLTree, ChainingHashTable, and HashTrieMap on alice.txt.  Is
 there a clear winner?  Why or why not?  Is the winner surprising to you?
-<pre>TODO</pre>
+
+I tested them by using a modified incCount on each word in the text using a word reader, and calculated the average runtime for all the insertions
+over 90 trials and 10 warmup trials. Based on the results, we can see that AVL Tree performs the best, followed by HashTrieMap, BST, then Chaining
+Hash Table. However, there is not a clear winner as all of them ranges from only a couple milliseconds, which is not significant enough to determine
+anything. My intuition is that the number of words in the text is not large enough to show the asymptotic difference between the data structures.
+That said, if there were enough words to do so, or sorted words are used (worst case), AVL Tree would still win due to its self balancing property,
+thus it is not a surprise that it would be the winner.
 
 
 ### uMessage ###
