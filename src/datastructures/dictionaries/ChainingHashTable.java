@@ -22,38 +22,36 @@ import cse332.interfaces.misc.SimpleIterator;
  *    NOTE: Do NOT copy the whole list!
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
-    private final Supplier<Dictionary<K, V>> NEWCHAIN;
+    private Supplier<Dictionary<K, V>> newChain;
     private Dictionary<K, V>[] hashTable;
     private int sizeTier;
+    private int lambda;
     private static final int[] PRIMES = {23, 37, 53, 79, 127, 173, 257, 389, 577, 877, 1297, 
             1949, 2917, 4391, 6563, 9851, 14767, 22147, 33211, 
             49823, 74729, 112087, 168143, 200003};
 
     @SuppressWarnings("unchecked")
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
-        NEWCHAIN = newChain;
+        this.newChain = newChain;
         hashTable = new Dictionary[23];
         sizeTier = 0;
+        lambda = this.size/hashTable.length;
     }
 
-    public int lambda() {
-        return this.size/hashTable.length;
-    }
-    
     @Override
     public V insert(K key, V value) {
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         }
-        if (NEWCHAIN.get() == null) { // not sure if needed
+        if (newChain.get() == null) { // not sure if needed
             throw new NullPointerException();
         }
-        if (lambda() > 0.75) { // check lambda is at acceptable lvls
+        if (lambda > 0.75) { // check lambda is at acceptable lvls
             rehash();
         }
-        int bucket = key.hashCode() % hashTable.length;
+        int bucket = Math.abs(key.hashCode() % hashTable.length);
         if (hashTable[bucket] == null) { // no chain
-            hashTable[bucket] = NEWCHAIN.get(); // creates new chain
+            hashTable[bucket] = newChain.get(); // creates new chain
             hashTable[bucket].insert(key, value);
             this.size++; //increase num of elements in table
             return null;
@@ -81,8 +79,8 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         Iterator<Item<K, V>> iter = this.iterator();
         while (iter.hasNext()) {
             Item<K, V> item = iter.next();
-            temp[item.key.hashCode() % temp.length] = NEWCHAIN.get();
-            temp[item.key.hashCode() % temp.length].insert(item.key, item.value);
+            temp[Math.abs(item.key.hashCode() % temp.length)] = newChain.get();
+            temp[Math.abs(item.key.hashCode() % temp.length)].insert(item.key, item.value);
         }
         hashTable = temp;
     }
@@ -92,10 +90,10 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         if (key == null) {
             throw new IllegalArgumentException();
         }
-        if (hashTable[key.hashCode() % hashTable.length] == null) {
+        if (hashTable[Math.abs(key.hashCode() % hashTable.length)] == null) {
             return null;
         }
-        return hashTable[key.hashCode() % hashTable.length].find(key);
+        return hashTable[Math.abs(key.hashCode() % hashTable.length)].find(key);
     }
 
     @Override
@@ -112,7 +110,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         private Iterator<Item<K, V>> innerIter;
         
         public HashIterator() {
-            full = NEWCHAIN.get();
+            full = newChain.get();
             for (int i = 0; i < hashTable.length; i++) { // loop over array
                 if (hashTable[i] != null) { // chain exists
                     Iterator<Item<K, V>> iter = hashTable[i].iterator();
