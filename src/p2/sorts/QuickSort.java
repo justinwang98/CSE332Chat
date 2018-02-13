@@ -2,6 +2,8 @@ package p2.sorts;
 
 import java.util.Comparator;
 
+import cse332.exceptions.NotYetImplementedException;
+
 public class QuickSort {
     public static <E extends Comparable<E>> void sort(E[] array) {
         QuickSort.sort(array, (x, y) -> x.compareTo(y));
@@ -26,7 +28,7 @@ public class QuickSort {
     public static <E> void quicksort(E[] array, int lo, int hi, Comparator<E> comparator) {
         
         
-        int median = (lo + hi) / 2;
+        int median = lo + (hi - lo) / 2;
         
         E pivot = array[median];
         
