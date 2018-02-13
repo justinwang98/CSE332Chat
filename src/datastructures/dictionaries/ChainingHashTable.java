@@ -2,17 +2,12 @@ package datastructures.dictionaries;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
-import com.sun.javafx.css.StyleCacheEntry.Key;
-
 import cse332.datastructures.containers.*;
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.misc.SimpleIterator;
-import cse332.interfaces.worklists.WorkList;
 
 /**
  * TODO: Replace this comment with your own as appropriate.
@@ -38,7 +33,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     @SuppressWarnings("unchecked")
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
-        hashTable = (Dictionary<K, V>[]) new Dictionary[23];
+        hashTable = new Dictionary[23];
         sizeTier = 0;
         lambda = this.size/hashTable.length;
     }
@@ -115,7 +110,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         private Iterator<Item<K, V>> innerIter;
         
         public HashIterator() {
-            full = (Dictionary<K, V>) newChain.get();
+            full = newChain.get();
             for (int i = 0; i < hashTable.length; i++) { // loop over array
                 if (hashTable[i] != null) { // chain exists
                     Iterator<Item<K, V>> iter = hashTable[i].iterator();

@@ -2,7 +2,6 @@ package datastructures.worklists;
 
 import java.util.NoSuchElementException;
 
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.worklists.FixedSizeFIFOWorkList;
 
 /**
@@ -80,8 +79,7 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     	return size;
     }
     
-    @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public void clear() {
         end = 0;
         start = 0;

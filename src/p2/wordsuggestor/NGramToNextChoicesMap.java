@@ -5,13 +5,12 @@ import java.util.Iterator;
 import java.util.function.Supplier;
 
 import cse332.datastructures.containers.Item;
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.Dictionary;
-import cse332.interfaces.misc.SimpleIterator;
 import cse332.misc.LargeValueFirstItemComparator;
 import cse332.sorts.InsertionSort;
 import cse332.types.AlphabeticString;
 import cse332.types.NGram;
+import p2.sorts.TopKSort;
 
 public class NGramToNextChoicesMap {
     private final Dictionary<NGram, Dictionary<AlphabeticString, Integer>> map;
@@ -48,6 +47,7 @@ public class NGramToNextChoicesMap {
      * 
      * @return An array of all the Items for the requested ngram.
      */
+    @SuppressWarnings("unchecked")
     public Item<String, Integer>[] getCountsAfter(NGram ngram) {
         if (map.find(ngram) == null) {
             return new Item[0];
@@ -69,8 +69,7 @@ public class NGramToNextChoicesMap {
             InsertionSort.sort(afterNGrams, comp);
         }
         else {
-            // You must fix this line toward the end of the project
-            throw new NotYetImplementedException();
+            TopKSort.sort(afterNGrams, k, comp);
         }
 
         String[] nextWords = new String[k < 0 ? afterNGrams.length : k];
