@@ -3,16 +3,30 @@
 
 ## Project Enjoyment ##
 - What was your favorite part of the project? Why?
-  <pre>TODO</pre>
+  
+Our favorite part was using the knowledge we got in class to implement the different data
+structures and sorts. It was really cool to have the feeling that the things we learnt in class
+was important and useful.
 
 - What was your least favorite part of the project? Why?
-  <pre>TODO</pre>
+  
+Debugging AVLTree and quicksort was a nightmare, each in its own way. Having learnt how to use
+the visualizer recently, it helped me out alot in the debugging process, being able to locate 
+the problem visually. However, it was really hard to keep track of all the changing of pointers
+and the heavy use of recursion in both parts made debugging really confusing and tedious.
 
 - How could the project be improved? Why?
-  <pre>TODO</pre>
+- 
+  This project felt a little rushed, especially considering the fact that there were midterms in
+between. I know the two weeks before checkpoint 2 already took this into account, but nonetheless
+it ultimately still was not enough to complete checkpoint 2, especially because of the long debugging
+process for AVLTree.
 
 - Did you enjoy the project?  Why or why not?
-  <pre>TODO</pre>
+- 
+  Yes, I enjoyed this project a lot, even more so than project 1. This idea of building uMessage was really exciting,
+and implementing the data structures and sorts was a blast. It felt great to use all our knowledge from class and the last
+six weeks to make something that is relevant in today's world.
     
 -----
 
@@ -48,7 +62,15 @@ Construct inputs for BST and AVLTree to demonstrate that an AVL Tree is asymptot
 than a Binary Search Tree. Comparing the worst case for each structure is fine here. 
 To do this, we expect you to show trends.  You might consider fitting a curve to
 your results. Explain your intuition on why your results are what they are.
-<pre>TODO</pre>
+
+For this experiment, I used sorted integers as input to find the worst case for each structure. In other words,
+I inserted numbers from 1 to n and measured the time taken. I had n be a range from 100 to 5000. From the graph, we see that while
+the two data structures have similar runtimes for smaller numbers in the hundredths, as n gets asymptotically larger,
+AVLTree is significantly faster than BST. We can see a trend that shows the runtime of AVL increases linearly, while
+the runtime of BST increases quadratically. My intuition for the results is that since AVLTree is self-balancing, it usually is a
+shallower tree than BST, which means less comparisons, especially in sorted numbers. For example, if we have sorted numbers and we want
+to insert 8, we would have to traverse down 7 times to do 7 comparisons in order to insert 8 into a BST. However, for AVLTree we only
+have to traverse down 3 times to do 3 comparisons.
 
 ### ChainingHashTable ###
 Your ChainingHashTable should take as an argument to its constructor the type of "chains" it uses.  Determine
