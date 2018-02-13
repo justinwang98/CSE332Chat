@@ -10,7 +10,7 @@ public class TopKSort {
     }
 
     public static <E> void sort(E[] array, int k, Comparator<E> comparator) {
-        MinFourHeap<E> heap = new MinFourHeap<E>();
+        MinFourHeap<E> heap = new MinFourHeap<E>(comparator);
         for (int i = 0; i < array.length; i++) {
             if (heap.size() >= k) { // full
                 if (comparator.compare(heap.peek(), array[i]) < 0) { // next array value is bigger
