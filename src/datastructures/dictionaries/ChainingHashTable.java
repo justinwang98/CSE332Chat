@@ -1,12 +1,18 @@
 package datastructures.dictionaries;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
+
+import com.sun.javafx.css.StyleCacheEntry.Key;
 
 import cse332.datastructures.containers.*;
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.DeletelessDictionary;
 import cse332.interfaces.misc.Dictionary;
+import cse332.interfaces.misc.SimpleIterator;
+import cse332.interfaces.worklists.WorkList;
 
 /**
  * TODO: Replace this comment with your own as appropriate.
@@ -21,24 +27,116 @@ import cse332.interfaces.misc.Dictionary;
  *    NOTE: Do NOT copy the whole list!
  */
 public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
-    private Supplier<Dictionary<K, V>> newChain;  
+    private Supplier<Dictionary<K, V>> newChain;
+    private Dictionary<K, V>[] hashTable;
+    private int sizeTier;
+    private int lambda;
+    private static final int[] PRIMES = {23, 37, 53, 79, 127, 173, 257, 389, 577, 877, 1297, 
+            1949, 2917, 4391, 6563, 9851, 14767, 22147, 33211, 
+            49823, 74729, 112087, 168143, 200003};
 
+    @SuppressWarnings("unchecked")
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
+        hashTable = (Dictionary<K, V>[]) new Dictionary[23];
+        sizeTier = 0;
+        lambda = this.size/hashTable.length;
     }
 
     @Override
     public V insert(K key, V value) {
-        throw new NotYetImplementedException();
+        if (key == null || value == null) {
+            throw new IllegalArgumentException();
+        }
+        if (newChain.get() == null) { // not sure if needed
+            throw new NullPointerException();
+        }
+        if (lambda > 0.75) { // check lambda is at acceptable lvls
+            rehash();
+        }
+        int bucket = key.hashCode() % hashTable.length;
+        if (hashTable[bucket] == null) { // no chain
+            hashTable[bucket] = newChain.get(); // creates new chain
+            hashTable[bucket].insert(key, value);
+            this.size++; //increase num of elements in table
+            return null;
+        } else { // chain
+            V temp = hashTable[bucket].find(key);
+            if (temp == null) {
+                this.size++; //increase num of elements in table
+            }
+            hashTable[bucket].insert(key, value);
+            return temp;
+        }
+    }
+    
+    // increases size of array to next available prime
+    @SuppressWarnings("unchecked")
+    private void rehash() {
+        sizeTier += 1;
+        int newSize = 0;
+        if (sizeTier <= PRIMES.length - 1) { // below 200000
+            newSize = PRIMES[sizeTier];
+        } else { // above 200000
+            newSize = 200000 * (int) (Math.pow(2, sizeTier - PRIMES.length));
+        }
+        Dictionary<K, V>[] temp = (Dictionary<K, V>[]) new Dictionary[newSize];
+        Iterator<Item<K, V>> iter = this.iterator();
+        while (iter.hasNext()) {
+            Item<K, V> item = iter.next();
+            temp[item.key.hashCode() % temp.length] = newChain.get();
+            temp[item.key.hashCode() % temp.length].insert(item.key, item.value);
+        }
+        hashTable = temp;
     }
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+        if (key == null) {
+            throw new IllegalArgumentException();
+        }
+        if (hashTable[key.hashCode() % hashTable.length] == null) {
+            return null;
+        }
+        return hashTable[key.hashCode() % hashTable.length].find(key);
     }
 
     @Override
     public Iterator<Item<K, V>> iterator() {
-        throw new NotYetImplementedException();
+        return new HashIterator<Item<K, V>>();
+    }
+    
+    public Iterator<SimpleEntry<K, V>> iteratorEntry() {
+        return new HashIterator<SimpleEntry<K, V>>();
+    }
+    
+    private class HashIterator<E> extends SimpleIterator<E>{
+        private Dictionary<K, V> full;
+        private Iterator<Item<K, V>> innerIter;
+        
+        public HashIterator() {
+            full = (Dictionary<K, V>) newChain.get();
+            for (int i = 0; i < hashTable.length; i++) { // loop over array
+                if (hashTable[i] != null) { // chain exists
+                    Iterator<Item<K, V>> iter = hashTable[i].iterator();
+                    for (int j = 0; j < hashTable[i].size(); j++) { // loop over chain inside array
+                        Item<K, V> temp = iter.next();
+                        full.insert(temp.key, temp.value);
+                    }
+                }   
+            }
+            innerIter = full.iterator();
+        }
+        
+        @SuppressWarnings("unchecked")
+        @Override
+        public E next() {
+            return (E) innerIter.next();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return innerIter.hasNext();
+        }
     }
 }

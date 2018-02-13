@@ -135,7 +135,11 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
 
     @Override
     public int hashCode() {
-        // You will implement this method in p2. Leave this method unchanged for p1.
-        throw new NotYetImplementedException();
+        int result = 17;
+        for (int i = 0; i < size; i ++) {
+            int fieldHashcode = array[i].hashCode();
+            result = 31 * result + fieldHashcode;
+        }
+        return result;
     }
 }

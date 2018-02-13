@@ -56,10 +56,19 @@ public class NGramToNextChoicesMapTests extends TestsUtility {
         }
         for (int i = 0; i < ngrams.length; i++) {
             Item<String, Integer>[] items = map.getCountsAfter(ngrams[i]);
-            if (items.length != 1) return 0;
+            if (items.length != 1) {
+                System.out.println("1");
+                return 0;
+            }
             Item<String, Integer> item = items[0];
-            if (!item.key.equals(words[i])) return 0;
-            if (!item.value.equals(1)) return 0;
+            if (!item.key.equals(words[i])) {
+                System.out.println("2");
+                return 0;
+            }
+            if (!item.value.equals(1)) {
+                System.out.println("3");
+                return 0;
+            }
         }
         
         return 1;
