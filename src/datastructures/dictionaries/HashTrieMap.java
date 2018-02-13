@@ -3,11 +3,11 @@ package datastructures.dictionaries;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Iterator;
 import java.util.Map.Entry;
+
 import cse332.datastructures.containers.Item;
 import cse332.interfaces.misc.BString;
 import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.trie.TrieMap;
-import datastructures.dictionaries.HashTrieMap.HashTrieNode;
 
 /**
  * See cse332/interfaces/trie/TrieMap.java
