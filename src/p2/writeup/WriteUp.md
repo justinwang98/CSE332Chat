@@ -117,7 +117,11 @@ Use uMessage to test out your implementations.  Using N=3, uMessage should take 
 your best algorithms and data structures on a reasonable machine.
 
  -  How are the suggestions uMessage gives with the default corpus? (here we mean spoken.corpus or irc.corpus, not eggs.txt)
-    <pre>TODO</pre>
+    
+    We used irc.corpus the hashtable constructor to run uMessage. Overall, the suggestions were okay, but we had to try hard
+    sometimes to make it make sense. It was kind of hard to direct where the sentence is going, and there were some weird, which
+    maybe spelling errors, such as "ubuntu". Also, there were general words like propositions, "at" or "in" or "well", which 
+    appeared way too often, probably due to the large number of times the combination exists in the text.
 
  - Now, switch uMessage to use a corpus of YOUR OWN text. To do this, you will need a corpus. 
    You can use anything you like (Facebook, google talk, e-mails, etc.)  We provide
@@ -130,7 +134,11 @@ your best algorithms and data structures on a reasonable machine.
      * Use the output file "me.txt" as the corpus for uMessage.
  
  - How are the suggestions uMessage gives wth the new corpus?
-   <pre>TODO</pre>
+   
+    I used my Facebook data as the corpus for uMessage, and the suggestions looked more relevant to normal human interaction. However,
+   there were much more spelling mistakes and not "real" words, with more slang and shortforms that I typically write. That said, 
+   since I don't use Facebook much, there were not much data to work with, and thus the suggestions were a bit awkward, but overall it
+   felt more flexible and... interesting. 
 
 -----
 
@@ -138,4 +146,5 @@ your best algorithms and data structures on a reasonable machine.
 
 ## Above and Beyond ##
 -   Did you do any Above and Beyond?  Describe exactly what you implemented.
+-   
  We did not do Above and Beyond.
