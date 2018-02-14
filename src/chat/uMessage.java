@@ -25,6 +25,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import cse332.datastructures.trees.BinarySearchTree;
 import cse332.interfaces.misc.Dictionary;
 import cse332.types.AlphabeticString;
 import cse332.types.NGram;
@@ -32,12 +33,12 @@ import p2.clients.NGramTester;
 import p2.wordsuggestor.WordSuggestor;
 
 public class uMessage {
-    private static int N = 2;
-    private static String CORPUS = "alice.txt";
+    private static int N = 3;
+    private static String CORPUS = "irc.corpus";
     private static Supplier<Dictionary<NGram, Dictionary<AlphabeticString, Integer>>> NEW_OUTER = NGramTester
-            .trieConstructor(NGram.class);
+            .hashtableConstructor(() -> new BinarySearchTree());
     private static Supplier<Dictionary<AlphabeticString, Integer>> NEW_INNER = NGramTester
-            .trieConstructor(AlphabeticString.class);
+            .hashtableConstructor(() -> new BinarySearchTree());
 
     /*
      *

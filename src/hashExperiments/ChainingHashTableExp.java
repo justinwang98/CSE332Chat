@@ -12,21 +12,22 @@ public class ChainingHashTableExp {
     
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-            if (n < 300) {
-                n += 100;
-            } else if (n < 500) {
-                n += 200;
-            } else if (n < 800) {
-                n += 300;
-            } else if (n < 1500) {
-                n += 700;
-            } else if (n < 3000) {
-                n += 1500;
-            } else if (n < 7000) {
-                n += 2000;
-            } else {
-                n += 3000;
-            }
+//            if (n < 300) {
+//                n += 100;
+//            } else if (n < 500) {
+//                n += 200;
+//            } else if (n < 800) {
+//                n += 300;
+//            } else if (n < 1500) {
+//                n += 700;
+//            } else if (n < 3000) {
+//                n += 1500;
+//            } else if (n < 7000) {
+//                n += 2000;
+//            } else {
+//                n += 3000;
+//            }
+            n = 20000;
             fulltest();
         }
     }
@@ -39,7 +40,7 @@ public class ChainingHashTableExp {
         for (int i = 0; i < NUM_TESTS; i++) {
             long startTime = System.currentTimeMillis();
             // Put whatever you want to time here .....
-            test("avl");
+            test("mtf");
             long endTime = System.currentTimeMillis();
             if (NUM_WARMUP <= i) { // Throw away first NUM_WARMUP runs to exclude JVM warmup
                 totalTime += (endTime - startTime);
@@ -59,11 +60,11 @@ public class ChainingHashTableExp {
     public static int test(String type) {
         ChainingHashTable<String, Integer> list;
         if (type.equals("mtf")) { // mtf list
-            list = new ChainingHashTable<>(() -> new MoveToFrontList<>());
+            list = new ChainingHashTable<String, Integer>(() -> new MoveToFrontList<>());
         } else if (type.equals("bst")) { // bst list
             list = new ChainingHashTable<String, Integer>(() -> new BinarySearchTree<>());
         } else if (type.equals("avl")){ // avl list
-            list = new ChainingHashTable<String, Integer>(() -> new MoveToFrontList<>());
+            list = new ChainingHashTable<String, Integer>(() -> new AVLTree<>());
         } else {
             throw new IllegalArgumentException();
         }
