@@ -17,7 +17,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
     
 	@SuppressWarnings("unchecked")
 	public MinFourHeap(Comparator c) {
-    	data = (E[])new Comparable[10];
+    	data = (E[])new Object[10];
     	size = 0;
     	this.c = c;
     }

@@ -13,14 +13,17 @@ was important and useful.
 Debugging AVLTree and quicksort was a nightmare, each in its own way. Having learnt how to use
 the visualizer recently, it helped me out alot in the debugging process, being able to locate 
 the problem visually. However, it was really hard to keep track of all the changing of pointers
-and the heavy use of recursion in both parts made debugging really confusing and tedious.
+and the heavy use of recursion in both parts made debugging really confusing and tedious. HashTrieMap
+Full Circle was also very annoying to implment as essentially there were instructions. I wished there
+would be more guidance for it as in the end, I relied upon asking TA's to help guide me through the 
+process.
 
 - How could the project be improved? Why?
 - 
   This project felt a little rushed, especially considering the fact that there were midterms in
 between. I know the two weeks before checkpoint 2 already took this into account, but nonetheless
 it ultimately still was not enough to complete checkpoint 2, especially because of the long debugging
-process for AVLTree.
+process for AVLTree and for understanding what to do for HashTrieMap Full Circle.
 
 - Did you enjoy the project?  Why or why not?
 - 
@@ -72,6 +75,10 @@ shallower tree than BST, which means less comparisons, especially in sorted numb
 to insert 8, we would have to traverse down 7 times to do 7 comparisons in order to insert 8 into a BST. However, for AVLTree we only
 have to traverse down 3 times to do 3 comparisons. Thus, AVLTree is asymptotically much superior than BST.
 
+![](AVLCompareBST.PNG)
+![](BST.PNG)
+![](AVLTree.PNG)
+
 ### ChainingHashTable ###
 Your ChainingHashTable should take as an argument to its constructor the type of "chains" it uses.  Determine
 which type of chain is (on average, not worst case) best: an MTFList, a BST, or an AVL Tree.  Explain your intuition on why
@@ -81,12 +88,16 @@ In this experiment to look at average speed, I used the testHugeHashtable's base
 
 From the graph it is obvious that the BST is significantly worse than both the AVL and MTFlist. This brings an interesting point as the values and graph for AVL and MTFlist are extremely close with AVL always a little ahead. The difference is so marginal that it is safe to assume that they have around the same runtime and are generally the same in terms of effectiveness and speed. My intuition for this is that because the BST is not self-balancing, the more items that are stored in the BST the more cluttered it becomes and the further down branches find and insertion operations will have to travel. This issue is not present in AVL and MTFlist therefore it makes sense that they are considerably faster.
  
+ ![](ChainTypeComparison.PNG)
+ 
 ### Hash Functions ###
 Write a new hash function (it doesn't have to be any good, but remember to include the code in your repository).
 Compare the runtime of your ChainingHashTable when the hash function is varied.  How big of a difference can the
 hash function make (on average, not worst case)?  (You should keep all other inputs (e.g., the chain type) constant.)  Explain your intuition on why your results are what they are.
 
 To test this case, I created an experiment to test the runtimes between two different hash functions, one that was originally used for the ChainingHashTable based upon the slides, and another that simple returns the hashcode of the entire array. In order to isolate the difference in timing based upon the hashcode, I used AVL as the chain type for both tests and kept everything else the same. I looked at the a range of numbers from 100 to 10000 and used the insert and find functions to compared them in a bar graph to show the difference between the two values at each time. Just as I expected, the hashcode I created based off the slides for p2 was quite a bit faster than the simple hashcode I created. This is because the hashcode algorithm is based upon creating unique hashcodes for every single value so that it limits the amount of collisions that occur. A simple hashcode algorithm does not sufficiently create a unique enough hashcode and will most likely give similar hashcodes to a larger amount of objects than a better one will. These collisions will effect both the insert and find of the hashtable as every collision means more work to do for both methods. Inserting will take longer as more spots will be filled and the hashtable will have to go further into each chain in order to place the item and finding has the same issue.
+
+![](HashFunctionComparison.PNG)
 
 ### General Purpose Dictionary ###
 Compare BST, AVLTree, ChainingHashTable, and HashTrieMap on alice.txt.  Is
@@ -99,6 +110,7 @@ My intuition is that the number of words in the text is not large enough to show
 there were enough words to do so, or sorted words are used (worst case), chaining hash table should still win due to its average  O(1) runtime for insert.
 A possible reason for the slower runtime for HashTrieMap is that converting the string to Alphabetic string takes some time.
 
+![](GeneralPurposeDictionaries.PNG)
 
 ### uMessage ###
 Use uMessage to test out your implementations.  Using N=3, uMessage should take less than a minute to load using
@@ -122,12 +134,8 @@ your best algorithms and data structures on a reasonable machine.
 
 -----
 
-A sample image:
 
-![](husky.jpg)
-
-To show you how it is done.
 
 ## Above and Beyond ##
 -   Did you do any Above and Beyond?  Describe exactly what you implemented.
- <pre>TODO</pre>
+ We did not do Above and Beyond.
