@@ -92,12 +92,12 @@ To test this case, I created an experiment to test the runtimes between two diff
 Compare BST, AVLTree, ChainingHashTable, and HashTrieMap on alice.txt.  Is
 there a clear winner?  Why or why not?  Is the winner surprising to you?
 
-I tested them by using a modified incCount on each word in the text using a word reader, and calculated the average runtime for all the insertions
-over 90 trials and 10 warmup trials. Based on the results, we can see that AVL Tree performs the best, followed by HashTrieMap, BST, then Chaining
-Hash Table. However, there is not a clear winner as all of them ranges from only a couple milliseconds, which is not significant enough to determine
-anything. My intuition is that the number of words in the text is not large enough to show the asymptotic difference between the data structures.
-That said, if there were enough words to do so, or sorted words are used (worst case), AVL Tree would still win due to its self balancing property,
-thus it is not a surprise that it would be the winner.
+I tested them by using a modified incCount on each word in the text using a word reader, and calculated the average runtime for all the insertions twice
+over 200 trials and 20 warmup trials. Based on the results, we can see that Chaining Hash table performs the best, followed by AVL, HashTrieMap, then BST.
+However, there is not a clear winner as all of them ranges from only a couple milliseconds, which is not significant enough to determine anything.
+My intuition is that the number of words in the text is not large enough to show the asymptotic difference between the data structures. That said, if 
+there were enough words to do so, or sorted words are used (worst case), chaining hash table should still win due to its average  O(1) runtime for insert.
+A possible reason for the slower runtime for HashTrieMap is that converting the string to Alphabetic string takes some time.
 
 
 ### uMessage ###

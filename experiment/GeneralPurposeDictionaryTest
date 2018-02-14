@@ -16,8 +16,8 @@ import datastructures.dictionaries.MoveToFrontList;
 public class GeneralPurposeDictionary {
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        int NUM_TESTS = 50;
-        int NUM_WARMUP = 5;
+        int NUM_TESTS = 200;
+        int NUM_WARMUP = 20;
         
         double totalTime = 0;
         for (int i = 0; i < NUM_TESTS; i++) {
@@ -27,8 +27,12 @@ public class GeneralPurposeDictionary {
             // Put whatever you want to time here .....
             
             //HashTrieMapTest("alice.txt");
-            //AVLTest("alice.txt");
-            BSTTest("alice.txt");
+            //HashTrieMapTest("alice.txt");
+            AVLTest("alice.txt");
+            AVLTest("alice.txt");
+            //BSTTest("alice.txt");
+            //BSTTest("alice.txt");
+            //ChainingHashTableTest("alice.txt");
             //ChainingHashTableTest("alice.txt");
            
             
@@ -50,6 +54,7 @@ public class GeneralPurposeDictionary {
         while (reader.hasNext()) {
             String key = reader.next();
             incCount(tree, key);
+            incCount(tree, key);
         }
         
         reader.close(); 
@@ -63,6 +68,7 @@ public class GeneralPurposeDictionary {
 
         while (reader.hasNext()) {
             String key = reader.next();
+            incCount(list, key);
             incCount(list, key);
         }
         
@@ -79,6 +85,7 @@ public class GeneralPurposeDictionary {
         while (reader.hasNext()) {
             String key = reader.next();
             AlphabeticString key1 = new AlphabeticString(key);
+            incCount2(STUDENT, key1);
             incCount2(STUDENT, key1);
         }
         
@@ -117,6 +124,7 @@ public class GeneralPurposeDictionary {
 
         while (reader.hasNext()) {
             String key = reader.next();
+            incCount(tree, key);
             incCount(tree, key);
         }
         
