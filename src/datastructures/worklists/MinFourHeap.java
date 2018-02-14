@@ -32,7 +32,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
     //insert
     public void add(E work) {
     	if (size == data.length) { // if size is max
-    		E[] data2 = (E[]) new Comparable[data.length * 2]; // make new array with double size
+    		E[] data2 = (E[]) new Object[data.length * 2]; // make new array with double size
     		for (int i = 0; i < data.length; i++) { // add in all the old elements to new array
     			data2[i] = data[i];
     		}
@@ -75,7 +75,7 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
     @SuppressWarnings("unchecked")
 	@Override
     public void clear() {
-    	data = (E[])new Comparable[10];
+    	data = (E[])new Object[10];
     	size = 0;
     }
     

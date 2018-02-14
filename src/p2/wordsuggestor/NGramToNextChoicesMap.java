@@ -28,14 +28,16 @@ public class NGramToNextChoicesMap {
      * Increments the count of word after the particular NGram ngram.
      */
     public void seenWordAfterNGram(NGram ngram, String word) {
-        AlphabeticString aWord = new AlphabeticString(word);
-        if (map.find(ngram) == null) { // if ngram is not there
-            map.insert(ngram, newInner.get()); // insert ngram
-        }
-        if (map.find(ngram).find(aWord) == null) { // word is not there
-            map.find(ngram).insert(aWord, 1);
-        } else { // word is there, then increment by one
-            map.find(ngram).insert(aWord, map.find(ngram).find(aWord) + 1);
+        if (ngram != null && word != null) {
+            AlphabeticString aWord = new AlphabeticString(word);
+            if (map.find(ngram) == null) { // if ngram is not there
+                map.insert(ngram, newInner.get()); // insert ngram
+            }
+            if (map.find(ngram).find(aWord) == null) { // word is not there
+                map.find(ngram).insert(aWord, 1);
+            } else { // word is there, then increment by one
+                map.find(ngram).insert(aWord, map.find(ngram).find(aWord) + 1);
+            }
         }
     }
 
@@ -50,12 +52,13 @@ public class NGramToNextChoicesMap {
      */
     @SuppressWarnings("unchecked")
     public Item<String, Integer>[] getCountsAfter(NGram ngram) {
-        if (map.find(ngram) == null) {
+        Dictionary<AlphabeticString, Integer> temp = map.find(ngram);
+        if (temp == null) {
             return new Item[0];
         }
-        Item<String, Integer>[] counts = new Item[map.find(ngram).size()]; //create array for size of ngram
-        Iterator<Item<AlphabeticString, Integer>> iter = map.find(ngram).iterator();
-        for (int i = 0; i < map.find(ngram).size(); i++) { //loop through the things
+        Item<String, Integer>[] counts = new Item[temp.size()]; //create array for size of ngram
+        Iterator<Item<AlphabeticString, Integer>> iter = temp.iterator();
+        for (int i = 0; i < temp.size() && iter.hasNext(); i++) { //loop through the things
             Item<AlphabeticString, Integer> item = iter.next();
             counts[i] = new Item<String, Integer>(item.key.toString(), item.value);
         }
@@ -70,7 +73,22 @@ public class NGramToNextChoicesMap {
             QuickSort.sort(afterNGrams, comp);
         }
         else {
-            TopKSort.sort(afterNGrams, k, comp);
+            int count = 0;
+            for (int i = 0; i < afterNGrams.length; i++) {
+                if (afterNGrams[i] != null) {
+                    count++;
+                }
+            }
+            Item<String, Integer>[] temp = new Item[count];
+            int count2 = 0;
+            for (int i = 0; i < afterNGrams.length; i++) {
+                if (afterNGrams[i] != null) {
+                    temp[count2] = afterNGrams[i];
+                    count2++;
+                }
+            }
+            afterNGrams = temp;
+            TopKSort.sort(afterNGrams, k, comp.reversed());
         }
 
         String[] nextWords = new String[k < 0 ? afterNGrams.length : k];

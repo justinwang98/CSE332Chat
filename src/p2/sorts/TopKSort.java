@@ -23,7 +23,7 @@ public class TopKSort {
         }
         // save max size
         int maxSize = heap.size();
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < Math.min(k, array.length); i++) {
             if (i < maxSize) { // from i to maxSize - 1, put the heap values into array
                 array[i] = heap.next();
             } else { // otherwise put null
